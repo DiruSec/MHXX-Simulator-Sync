@@ -1,5 +1,5 @@
 # MHXX Simulator Sync
-Sync localStorage between devices for (MHXX スキルシミュ(泣))[http://mhxx.wiki-db.com/sim].
+Sync localStorage between devices for [MHXX スキルシミュ(泣)](http://mhxx.wiki-db.com/sim).
 
 # Usage
 1. Deploy python file on your devices.
