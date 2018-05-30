@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MHXX Simulator Syncing
 // @namespace    http://tampermonkey.net/
-// @version      0.2
+// @version      0.3
 // @description  Sync simulator data between multiple devices.
 // @author       DiruSec
 // @include      *//mhxx.wiki-db.com/sim/
@@ -73,8 +73,7 @@
     }
 
     function syncToServer(){
-        getLocalStorage()
-        if (!checkSyncVaild()) return false;
+        if (!checkSyncVaild()){return false};
 
         GM_xmlhttpRequest({
             method: "POST",
@@ -98,7 +97,7 @@
     }
 
     function syncFromServer(){
-        if (!checkSyncVaild()) return false;
+        if (!checkSyncVaild()){return false};
 
         GM_xmlhttpRequest({
             method: "POST",
@@ -127,20 +126,25 @@
     }
 
     function checkSyncVaild(){
+        getLocalStorage()
         if (data.length < 1){
             sentMessage("Failed!","没有可同步的数据");
+            console.log("Failed at validating data.")
             return false
         }
         if (syncid == ""){
             sentMessage("Failed!","未指定同步ID");
+            console.log("Failed at validating syncid.")
             return false
         }
         if (syncurl == "" || syncurl === null){
             sentMessage("Failed!","未指定服务器URL");
+            console.log("Failed at validating syncurl.")
             return false
         }
+        return true;
     }
-    
+
     function showSyncID(){
         alert(syncid)
     }
