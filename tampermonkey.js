@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         MHXX Simulator Syncing
 // @namespace    http://tampermonkey.net/
-// @version      0.3
+// @version      0.4
 // @description  Sync simulator data between multiple devices.
 // @author       DiruSec
-// @include      *//mhxx.wiki-db.com/sim/
-// @match        http://mhxx.wiki-db.com/sim/
+// @include      *//*.wiki-db.com/sim/
+// @match        http://*.wiki-db.com/sim/
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @grant        GM_registerMenuCommand
@@ -39,6 +39,10 @@
     // GM_registerMenuCommand("获取同步数据", getSyncData)
     // GM_registerMenuCommand("保存后关闭", doPromise)
 
+
+    function getCurrentTools(){
+        return document.location.host.split(".")[0]
+    }
 
     function getLocalStorage(){
         for (var i=0; i<localStorage.length; i++){
@@ -79,7 +83,7 @@
             method: "POST",
             url: syncurl,
             headers: {"Content-type": "application/x-www-form-urlencoded; charset=UTF-8"},
-            data: "data=" + JSON.stringify(data) + "&mode=send&syncid=" + syncid,
+            data: "data=" + JSON.stringify(data) + "&mode=send&tool=" +getCurrentTools()+"&syncid=" + syncid,
             onload: function(responseDetails){
                 if (responseDetails.status == 200){
                     let responseJSON = JSON.parse(responseDetails.responseText)
@@ -104,7 +108,7 @@
             url: syncurl,
             dataType: "json",
             headers: {"Content-type": "application/x-www-form-urlencoded; charset=UTF-8"},
-            data: "mode=receive&syncid=" + syncid,
+            data: "mode=receive&tool=" +getCurrentTools()+"&syncid=" + syncid,
             onload: function(responseDetails){
                 var responseJSON = JSON.parse(responseDetails.responseText)
                 var status = responseJSON.status

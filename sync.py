@@ -31,7 +31,7 @@ except:
 
 form = cgi.FieldStorage()
 mode = str(form.getlist("mode")[0])
-syncid = str(form.getlist("syncid")[0])
+syncid = str(form.getlist("tool")[0]) + "_" + str(form.getlist("syncid")[0])
 
 if (mode == 'send'):
     data = str(form.getlist("data")[0])
