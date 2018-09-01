@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         MHXX Simulator Syncing
 // @namespace    http://tampermonkey.net/
-// @version      0.4
+// @version      0.5
 // @description  Sync simulator data between multiple devices.
 // @author       DiruSec
 // @include      *//*.wiki-db.com/sim/
+// @include      *//*.wiki-db.com/sim/?hl=*
 // @match        http://*.wiki-db.com/sim/
 // @grant        GM_getValue
 // @grant        GM_setValue
@@ -21,24 +22,45 @@
 (function() {
     'use strict';
     var data = {}
+    var autosync = GM_getValue("autosync")==undefined? false : GM_getValue("autosync")
     var syncid = GM_getValue("syncid")
     var syncurl = GM_getValue("syncurl")
-    syncFromServer()
 
-    // 关闭窗口之前保存
-    window.onbeforeunload = function() {
-        doPromise();
-        return '关闭提示';
-      };
+    if (autosync){
+        syncFromServer()
+
+        window.onbeforeunload = function() {
+            doPromise();
+            return '关闭提示';
+        };
+    }
 
     GM_registerMenuCommand("设置服务器URL", setSyncURL)
     GM_registerMenuCommand("设置同步ID", setSyncID)
     GM_registerMenuCommand("同步到服务器", syncToServer)
     GM_registerMenuCommand("同步到本地", syncFromServer)
+    GM_registerMenuCommand("切换自动同步状态", switchAutoSync)
     // GM_registerMenuCommand("显示同步ID", showSyncID)
     // GM_registerMenuCommand("获取同步数据", getSyncData)
     // GM_registerMenuCommand("保存后关闭", doPromise)
 
+
+
+    function switchAutoSync(){
+        if (autosync){
+            window.onbeforeunload = function() {};
+            autosync = false
+        } else {
+            window.onbeforeunload = function() {
+                doPromise();
+                return '关闭提示';
+            };
+            autosync = true
+        }
+
+        GM_setValue("autosync", autosync)
+        sentMessage("","自动同步已"+(autosync?"开启":"关闭"));
+    }
 
     function getCurrentTools(){
         return document.location.host.split(".")[0]
@@ -160,6 +182,10 @@
 
     //TODO: promise响应非HTTP 200
     function doPromise(){
+        if (autosync == false){
+            return false
+        }
+
         var promise = new Promise((resolve) =>{
             syncToServer()
             resolve("complete")
