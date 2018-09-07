@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MHXX Simulator Syncing
 // @namespace    http://tampermonkey.net/
-// @version      0.5
+// @version      0.6
 // @description  Sync simulator data between multiple devices.
 // @author       DiruSec
 // @include      *//*.wiki-db.com/sim/
@@ -70,7 +70,7 @@
         for (var i=0; i<localStorage.length; i++){
             var key = localStorage.key(i);
             var content = localStorage.getItem(key);
-            data[key] = eval(content);
+            data[key] = JSON.parse(content);
         }
     }
 
