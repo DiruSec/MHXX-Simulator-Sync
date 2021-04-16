@@ -15,8 +15,8 @@
 // @run-at       document-start
 // @grant        window.close
 // @grant        unsafeWindow
-// @updateURL    https://raw.githubusercontent.com/DiruSec/MHXX-Simulator-Sync/master/tampermonkey.js
-// @downloadURL  https://raw.githubusercontent.com/DiruSec/MHXX-Simulator-Sync/master/tampermonkey.js
+// @updateURL    https://raw.githubusercontent.com/DiruSec/MHXX-Simulator-Sync/master/tampermonkey.user.js
+// @downloadURL  https://raw.githubusercontent.com/DiruSec/MHXX-Simulator-Sync/master/tampermonkey.user.js
 // ==/UserScript==
 
 (function() {
