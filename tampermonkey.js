@@ -70,7 +70,7 @@
         for (var i=0; i<localStorage.length; i++){
             var key = localStorage.key(i);
             var content = localStorage.getItem(key);
-            data[key] = JSON.parse(content);
+            data[key] = content;
         }
     }
 
@@ -94,7 +94,8 @@
 
     function saveToLocalStorage(data){
         for (var key in data){
-            localStorage.setItem(key, JSON.stringify(data[key]))
+            console.log(key, data[key])
+            localStorage.setItem(key, data[key])
         }
     }
 
@@ -104,8 +105,13 @@
         GM_xmlhttpRequest({
             method: "POST",
             url: syncurl,
-            headers: {"Content-type": "application/x-www-form-urlencoded; charset=UTF-8"},
-            data: "data=" + JSON.stringify(data) + "&mode=send&tool=" +getCurrentTools()+"&syncid=" + syncid,
+            headers: {"Content-type": "application/json; charset=UTF-8"},
+            data: JSON.stringify({
+                data: data,
+                mode: "send",
+                tool: getCurrentTools(),
+                syncid: syncid
+            }),
             onload: function(responseDetails){
                 if (responseDetails.status == 200){
                     let responseJSON = JSON.parse(responseDetails.responseText)
@@ -129,16 +135,21 @@
             method: "POST",
             url: syncurl,
             dataType: "json",
-            headers: {"Content-type": "application/x-www-form-urlencoded; charset=UTF-8"},
-            data: "mode=receive&tool=" +getCurrentTools()+"&syncid=" + syncid,
+            headers: {"Content-type": "application/json; charset=UTF-8"},
+            data: JSON.stringify({
+                data: data,
+                mode: "receive",
+                tool: getCurrentTools(),
+                syncid: syncid
+            }),
             onload: function(responseDetails){
                 var responseJSON = JSON.parse(responseDetails.responseText)
                 var status = responseJSON.status
                 var message = responseJSON.message
                 if (responseDetails.status == 200 && status == 'success'){
-                    let data = responseJSON.data[0]
+                    let data = responseJSON.data
                     sentMessage(status,message)
-                    saveToLocalStorage(JSON.parse(data))
+                    saveToLocalStorage(data)
                 } else if (responseDetails.status == 200){
                     sentMessage(status,message)
                 } else {
